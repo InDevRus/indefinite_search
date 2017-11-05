@@ -1,14 +1,14 @@
 import unittest
 import pathmagic
-from tests.test_decorators import assert_function,\
-    append_arguments, wrap_string_in_io, wrap_list_in_io
+from tests.test_decorators import assert_equal, \
+    append_arguments, wrap_string_in_io
 from absolute_search import absolute_search as search
 
 
 class AbsoluteSearchTests(unittest.TestCase):
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(False, False, False)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_absolute_search(self):
         return [['Tris is\nmy text.', ['my', 'ma', 'temt', 'This', 'ab0'], 1,
@@ -30,9 +30,9 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '',
                   '"ab0" is not a word.')]]
 
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(False, True, False)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_absolute_search_with_ignore_case(self):
         return [['This is my text with SPACES.',
@@ -57,9 +57,9 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    "SPACES" in 1 line, 21 position.',
                   '    Total 1 occurrence.')]]
 
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(True, False, True)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_absolute_search_with_line_break(self):
         return [['Jived -\nf-\nox nym-\nph grabs quick walt-\nz.',
@@ -72,9 +72,9 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    "waltz" in 4 line, 15 position.',
                   '    Total 1 occurrence.')]]
 
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(True, False, False)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_absolute_search_without_word_wrap(self):
         return [['Glib jocks qu\niz nymph \nto ve\nx dwa-\nrf.',

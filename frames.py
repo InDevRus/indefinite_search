@@ -1,8 +1,8 @@
 def add_whitespaces(count: int = 4):
     def decorator(generator):
         def wrapped(*args):
-            for string in generator(*args):
-                yield ' ' * count + string
+            yield from map(lambda line: ' ' * count + line,
+                           generator(*args))
         return wrapped
     return decorator
 
@@ -14,11 +14,9 @@ def yield_occurrences(func, sequence):
         if func(pair[0]):
             yield '"{0}" in {1} position.'.format(*pair)
             count += 1
-    yield \
-        ('Total {0} occurrence' +
-         ('s' if count > 1 else '') +
-         '.').format(count)
-# TODO: Resolve code duplication.
+    yield ('Total {0} occurrence' +
+           ('s' if count > 1 else '') +
+           '.').format(count)
 
 
 def check_length(func):

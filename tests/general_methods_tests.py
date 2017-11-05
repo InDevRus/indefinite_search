@@ -1,12 +1,12 @@
 import unittest
 import pathmagic
-from tests.test_decorators import assert_function,\
+from tests.test_decorators import assert_equal, \
     wrap_string_in_io, append_arguments
 import general_methods
 
 
 class GeneralMethodsTests(unittest.TestCase):
-    @assert_function(general_methods.redaction_length)
+    @assert_equal(general_methods.redaction_length)
     def test_redaction_length(self):
         data = [('', '', 0), ('a', '', 1), ('123', '321', 2),
                 ('cat', 'clone', 4), ('student', 'soldier', 5),
@@ -14,7 +14,7 @@ class GeneralMethodsTests(unittest.TestCase):
                 ('Tris', 'this', 2), ('word', 'word', 0)]
         return data
 
-    @assert_function(general_methods.get_lines_from_file, iterable=True)
+    @assert_equal(general_methods.get_lines_from_file, iterable=True)
     @wrap_string_in_io()
     def test_get_lines_from_file(self):
         data = [['134\n54\n\n\na\ne-\n\n',
@@ -23,7 +23,7 @@ class GeneralMethodsTests(unittest.TestCase):
                  ('', '67', 'a', '', '', '', '', 'x234')]]
         return data
 
-    @assert_function(general_methods.get_substrings_from_file, iterable=True)
+    @assert_equal(general_methods.get_substrings_from_file, iterable=True)
     @append_arguments(True)
     @wrap_string_in_io()
     def test_get_substring_with_line_break(self):
@@ -46,14 +46,14 @@ class GeneralMethodsTests(unittest.TestCase):
                   ('-', 2, 3), (' ', 2, 4), ('R', 3, 0),
                   ('d', 3, 1), ('2', 3, 2))]]
 
-    @assert_function(general_methods.get_substrings_from_file, iterable=True)
+    @assert_equal(general_methods.get_substrings_from_file, iterable=True)
     @wrap_string_in_io()
     def test_get_substring(self):
         return [['a-x-\nb', 2,
                  (('a-', 1, 0), ('-x', 1, 1), ('x-', 1, 2), ('-b', 1, 3))],
                 ['123', 2, (('12', 1, 0), ('23', 1, 1))]]
 
-    @assert_function(general_methods.get_words_from_file, iterable=True)
+    @assert_equal(general_methods.get_words_from_file, iterable=True)
     @wrap_string_in_io()
     def test_get_words_from_text(self):
         return [['This is my text.',
@@ -81,7 +81,7 @@ class GeneralMethodsTests(unittest.TestCase):
                   ('line', 4, 1),
                   ('breaks', 4, 6))]]
 
-    @assert_function(general_methods.get_words_from_file, iterable=True)
+    @assert_equal(general_methods.get_words_from_file, iterable=True)
     @append_arguments(True)
     @wrap_string_in_io()
     def test_get_words_with_line_break(self):

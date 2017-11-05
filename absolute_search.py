@@ -4,7 +4,6 @@ from general_methods import redaction_length
 from general_methods import casefold
 
 
-# TODO: Resolve code duplication.
 def absolute_search(file, words, length: int,
                     no_wrap: bool = False,
                     ignore_case: bool = False,
@@ -14,17 +13,16 @@ def absolute_search(file, words, length: int,
     for the words absolutely in the file.
 
     Args:
-        file: File object.
-        words: File object with words to search in a file.
-        length: Expected redaction length.
-        no_wrap: New line symbol will not separate an unit word.
-        ignore_case: Str.casefold() will
-            be used before yielding.
-        line_break: '-' symbol before newline will
+        file (file): File object.
+        words (file): File object with words to search in a file.
+        length (int): Expected redaction length.
+        no_wrap (bool): New line symbol will not separate an unit word.
+        ignore_case (bool): Str.casefold() will
+            be used before comparing.
+        line_break (bool): '-' symbol before newline will
             not be yielded.
 
-    Returns:
-        generator: found positions for every word
+    Yields (str): found positions for every word.
     """
     first_word = True
     for word in get_lines_from_file(words):

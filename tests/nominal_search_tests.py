@@ -1,14 +1,14 @@
 import unittest
 import pathmagic
 from nominal_search import nominal_search as search
-from tests.test_decorators import assert_function,\
-    wrap_string_in_io, append_arguments, wrap_list_in_io
+from tests.test_decorators import assert_equal, \
+    wrap_string_in_io, append_arguments
 
 
 class NominalSearchTests(unittest.TestCase):
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(False, False)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_nominal_search(self):
         return [['Tris is my text.',
@@ -46,9 +46,9 @@ class NominalSearchTests(unittest.TestCase):
                   '    "притворяюсь" in 1 line, 2 position.',
                   '    Total 5 occurrences.')]]
 
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(True, False)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_nominal_search_with_ignore_case(self):
         return [['This is my text.', ['us', 'temt', 'this', 'crouch'], 1,
@@ -73,9 +73,9 @@ class NominalSearchTests(unittest.TestCase):
                   'For word "crouch":',
                   '    No occurrences found.')]]
 
-    @assert_function(search, iterable=True)
+    @assert_equal(search, iterable=True)
     @append_arguments(False, True)
-    @wrap_list_in_io()
+    @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
     def test_nominal_search_with_line_break(self):
         return [['Jived -\nf-\nox nym-\nph grabs quick walt-\nz.',

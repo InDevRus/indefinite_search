@@ -1,19 +1,18 @@
-import functools
+from functools import lru_cache
 from frames import check_length
 
 
-@functools.lru_cache(maxsize=1024)
+@lru_cache(maxsize=1024)
 @check_length
 def redaction_length(first: str, second: str) -> int:
     """
     Calculates the redaction length between two strings.
 
     Args:
-        first: First string.
-        second: second string.
+        first (str): First string.
+        second (str): second string.
 
-    Returns:
-        int: The redaction length between them.
+    Returns (int): The redaction length between them.
     """
     table = {}
 
@@ -41,17 +40,16 @@ def get_words_from_file(file, no_wrap: bool = False,
     Gets words from file.
 
     Args:
-        file: File object.
-        line_break: '-' symbol before newline will
+        file (file): File object.
+        line_break (bool): '-' symbol before newline will
             not be yielded.
-        no_wrap: line breaks symbols
+        no_wrap (bool): line breaks symbols
             will not separate an unite word
 
     Notes:
         line break symbols will be deleted from words anyway
 
-    Returns:
-        generator: Words from file with positions in it
+    Yields (tuple): Words from file with positions in it.
     """
     word = ''
     begin_position = position = 0
@@ -111,10 +109,9 @@ def get_lines_from_file(file):
     returns every line.
 
     Args:
-        file: File object.
+        file (file): File object.
 
-    Returns:
-        generator: Lines with deleted newline symbol.
+    Yields (str): Lines with deleted newline symbol.
     """
     file.seek(0)
     for line in file:
@@ -128,13 +125,12 @@ def get_substrings_from_file(file, length: int,
     returns every substring with given length.
 
     Args:
-        file: File object.
-        length: Expected length of substrings.
-        line_break: '-' symbol before newline will
+        file (file): File object.
+        length (int): Expected length of substrings.
+        line_break (bool): '-' symbol before newline will
             not be yielded.
 
-    Returns:
-        generator: Tuple of substrings and position.
+    Yields (tuple): Tuple of substrings and position.
     """
     position = -1
     line = 1
@@ -193,6 +189,6 @@ def get_substrings_from_file(file, length: int,
                 yield substring, (*positions[0])
 
 
-@functools.lru_cache(maxsize=512)
+@lru_cache(maxsize=512)
 def casefold(args):
     return [string.casefold() for string in args]

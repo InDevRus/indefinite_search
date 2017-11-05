@@ -14,6 +14,7 @@ def perform(gen):
     if count == 0:
         print('The word list is empty.')
 
+
 # Argument definition.
 parser = argparse.ArgumentParser(
     description='Reads the text (from file, parameter or STDIN)' +
