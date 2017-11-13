@@ -4,6 +4,7 @@ from io import StringIO
 def assert_equal(func, iterable=False, out_type=tuple):
     def decorator(test_method):
         def wrapped(self):
+            self.maxDiff = None
             for args in test_method(self):
                 result = func(*args[:-1])
                 result = out_type(result) if iterable else result
@@ -15,6 +16,7 @@ def assert_equal(func, iterable=False, out_type=tuple):
 def assert_different(func, iterable=False):
     def decorator(test_method):
         def wrapped(self):
+            self.maxDiff = None
             for args in test_method(self):
                 result = func(*args[:-1])
                 result = (result,) if iterable else result

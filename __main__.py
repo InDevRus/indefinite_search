@@ -1,9 +1,21 @@
 import argparse
 from io import StringIO
-from sys import stdin, stderr
+import os
+from sys import stderr, exit, stdin
+
 from nominal_search import nominal_search
 from absolute_search import absolute_search
-from frames import make_border
+
+temp_file_path = os.path.abspath(__file__).replace('\\', '/')
+temp_file_path = temp_file_path[:temp_file_path.rfind('/')] + '/temp.txt'
+was_stdin = False
+
+
+def make_border(string, func, *args):
+    print(string)
+    print('')
+    func(*args)
+    print('')
 
 
 def perform(gen):
@@ -13,6 +25,19 @@ def perform(gen):
         print(line)
     if count == 0:
         print('The word list is empty.')
+
+
+def move_stdin():
+    global was_stdin
+    was_stdin = True
+    with open(temp_file_path, 'w', encoding='utf-8') as temp_file:
+        for symbol in stdin:
+            temp_file.write(symbol)
+
+
+def remove_stdin():
+    if was_stdin:
+        os.remove(temp_file_path)
 
 
 # Argument definition.
@@ -51,6 +76,11 @@ parser.add_argument('-i', '--ignore_case', action='store_true',
 parser.add_argument('-b', '--line_break', action='store_true',
                     help='end line symbols (line breaking minuses) ' +
                     'will be deleted from text')
+parser.add_argument('-s', '--sort', action='store_true',
+                    help='output will be sorted by actual redaction length')
+parser.add_argument('-e', '--interactive', action='store_true',
+                    help='read from stdin will be interactive and will'
+                         'be stopped after first blank line')
 
 compare_group = parser.add_mutually_exclusive_group()
 compare_group.add_argument('-m', '--match',
@@ -84,13 +114,14 @@ try:
     elif arguments.text_file is not None:
         try:
             text_file = open(arguments.text_file, encoding='utf-8')
-        except FileNotFoundError:
-            print('There is no file, called {}.'.format(arguments.text_file),
-                  file=stderr)
+        except OSError:
+            print('Can\'t open file "{0}".'.format(
+                arguments.text_file), file=stderr)
             exit(2)
     # And finally, trying read text from STDIN.
     else:
-        text_file = StringIO(stdin.read())
+        move_stdin()
+        words_file = open(temp_file_path, encoding='utf-8')
 
     # Same actions for word list.
     if arguments.words is not None:
@@ -98,12 +129,13 @@ try:
     elif arguments.words_file is not None:
         try:
             words_file = open(arguments.words_file, encoding='utf-8')
-        except FileNotFoundError:
-            print('There is no file, called {}.'.format(arguments.words_file),
-                  file=stderr)
+        except OSError:
+            print('Can\'t open file "{0}".'.format(
+                arguments.words_file), file=stderr)
             exit(2)
     else:
-        words_file = StringIO(stdin.read())
+        move_stdin()
+        words_file = open(temp_file_path, encoding='utf-8')
 
     # Absolute search
     if not arguments.disable_absolute_search:
@@ -113,7 +145,8 @@ try:
                             arguments.length if not arguments.match else 0,
                             arguments.no_wrap,
                             arguments.ignore_case,
-                            arguments.line_break)
+                            arguments.line_break,
+                            arguments.sort)
         if arguments.enable_nominal_search:
             make_border('Absolute search.', perform, generator)
         else:
@@ -126,13 +159,20 @@ try:
                                    arguments.length if not
                                    arguments.match else 0,
                                    arguments.ignore_case,
-                                   arguments.line_break)
+                                   arguments.line_break,
+                                   arguments.sort)
         if not arguments.disable_absolute_search:
             make_border('Nominal search.', perform, generator)
         else:
             perform(generator)
+
+except Exception as exception:
+    print(str(exception), file=stderr)
+    exit(1)
+
 # If any error will appear, we must close any opened files.
 finally:
     for file in (text_file, words_file):
         if file is not None:
             file.close()
+    remove_stdin()

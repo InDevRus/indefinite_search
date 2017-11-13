@@ -1,5 +1,14 @@
 from functools import lru_cache
-from frames import check_length
+
+
+def check_length(func):
+    def wrapped(first: str, second: str):
+        if first == second:
+            return 0
+        else:
+            return func(first, second)
+
+    return wrapped
 
 
 @lru_cache(maxsize=1024)
@@ -62,7 +71,7 @@ def get_words_from_file(file, no_wrap: bool = False,
         begin_line = line
 
     def is_separator(subject: str) -> bool:
-        return not subject.isalpha() and subject != '\n'
+        return not subject.isalpha() and subject not in ('\n', '-')
 
     def read_symbol() -> str:
         nonlocal position, line
@@ -115,7 +124,10 @@ def get_lines_from_file(file):
     """
     file.seek(0)
     for line in file:
-        yield line.replace('\n', '')
+        line = line.replace('\n', '')
+        if len(line) >= 1 and line[-1] == '\r':
+            line = line[:-1]
+        yield line
 
 
 def get_substrings_from_file(file, length: int,
@@ -132,6 +144,7 @@ def get_substrings_from_file(file, length: int,
 
     Yields (tuple): Tuple of substrings and position.
     """
+    file.seek(0)
     position = -1
     line = 1
 
@@ -189,6 +202,52 @@ def get_substrings_from_file(file, length: int,
                 yield substring, (*positions[0])
 
 
-@lru_cache(maxsize=512)
-def casefold(args):
-    return [string.casefold() for string in args]
+def add_whitespaces(count: int = 4):
+    def decorator(generator):
+        def wrapped(*args):
+            yield from map(lambda line: ' ' * count + line,
+                           generator(*args))
+
+        return wrapped
+
+    return decorator
+
+
+def check_word(func):
+    def wrapped(word: str, *args):
+        if not word.replace('-', '').isalpha():
+            yield '"{0}" is not a word.'.format(word)
+        else:
+            yield 'For word "{0}":'.format(word)
+            yield from func(word, *args)
+
+    return wrapped
+
+
+@add_whitespaces()
+def yield_occurrences(word: str, length: int, sequence, ignore_case: bool,
+                      sort_by_length: bool = False):
+    def yield_answers():
+        for tokens in sequence:
+            substring = tokens[0]
+            substring = substring if not ignore_case else substring.casefold()
+            actual_length = redaction_length(word, substring)
+            if actual_length <= length:
+                yield (*tokens, actual_length)
+
+    word = word if not ignore_case else word.casefold()
+    pattern = '"{0}" in {1} line, {2} position with {3} length.'
+    count = 0
+    tetras = yield_answers()
+    tetras = tetras if not sort_by_length else sorted(tetras, key=
+    lambda tetra: tetra[-1])
+    for answers in tetras:
+        yield pattern.format(*answers)
+        count += 1
+    if count > 0:
+        yield \
+            ('Total {0} occurrence' +
+             ('s' if count > 1 else '') +
+             '.').format(count)
+    else:
+        yield 'No occurrences found.'
