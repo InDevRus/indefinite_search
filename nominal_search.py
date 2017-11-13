@@ -1,12 +1,12 @@
-from general_methods import get_lines_from_file
-from general_methods import get_substrings_from_file
-from general_methods import redaction_length
-from general_methods import casefold
+from general_methods import *
+from general_methods import check_word
+from itertools import chain
 
 
 def nominal_search(file, words, length: int,
                    ignore_case: bool = False,
-                   line_break: bool = False):
+                   line_break: bool = False,
+                   sort_by_length: bool = False):
     """
     Using the methods below searches
     for the words nominally in the file.
@@ -19,36 +19,25 @@ def nominal_search(file, words, length: int,
             be used before yielding.
         line_break (bool): '-' symbol before newline will
             not be yielded.
+        sort_by_length (bool): Output will be sorted by actual length.
 
-    Yields (str): found positions for every word
+    Yields (str): found positions for every word with length
     """
-    first_word = True
+
+    @check_word
+    def nominal_search_for_single_word(current_word: str):
+        sequence = chain(
+            [0], *map(lambda number: (-number, number), range(1, length + 1)))
+        sequence = filter(
+            lambda number: number > 0,
+            map(lambda number: len(current_word) + number, sequence))
+        substrings = chain(*map(
+            lambda number: get_substrings_from_file(file, number, line_break),
+            sequence))
+        yield from yield_occurrences(current_word, length,
+                                     substrings, ignore_case,
+                                     sort_by_length)
+
     for word in get_lines_from_file(words):
-        if not first_word:
-            yield ''
-        first_word = False
-        if not word.isalpha():
-            yield '"{0}" is not a word.'.format(word)
-        else:
-            yield 'For word "{0}":'.format(word)
-            sequence = \
-                [0] + [(-1)**a*b for b in range(1, length + 1) for a in (1, 2)]
-            count = 0
-            for element in sequence:
-                file.seek(0)
-                for pair in get_substrings_from_file(
-                        file, len(word) + element, line_break):
-                    to_compare = (pair[0], word)
-                    if redaction_length(
-                            *(to_compare if not ignore_case
-                              else casefold(to_compare))) <= length:
-                        yield '    "{0}" in {1} line, {2} position.'\
-                            .format(*pair)
-                        count += 1
-            if count > 0:
-                yield \
-                    ('    Total {0} occurrence' +
-                     ('s' if count > 1 else '') +
-                     '.').format(count)
-            else:
-                yield '    No occurrences found.'
+        file.seek(0)
+        yield from nominal_search_for_single_word(word)

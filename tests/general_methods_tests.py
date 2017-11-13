@@ -1,7 +1,7 @@
 import unittest
 import pathmagic
-from tests.test_decorators import assert_equal, \
-    wrap_string_in_io, append_arguments
+from tests.test_decorators import *
+from itertools import chain
 import general_methods
 
 
@@ -12,7 +12,8 @@ class GeneralMethodsTests(unittest.TestCase):
                 ('cat', 'clone', 4), ('student', 'soldier', 5),
                 ('troll', 'roll', 1), ('boil', 'ufo', 4),
                 ('Tris', 'this', 2), ('word', 'word', 0)]
-        return data
+        data = map(lambda x: (x, (x[1], x[0], x[2])), data)
+        return chain(*data)
 
     @assert_equal(general_methods.get_lines_from_file, iterable=True)
     @wrap_string_in_io()

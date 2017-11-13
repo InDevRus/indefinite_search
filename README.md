@@ -25,7 +25,7 @@ Open your operating system command shell:
 
 ```
 py indefinite_search [-h] [-a | -r] [-n] [-t [text] | -tf [path]]
-                     [-w [words] | -wf [path]] [-i] [-b] [-m | -l n]
+                     [-w [words] | -wf [path]] [-i] [-b] [-s] [-e] [-m | -l n]
 
 ```
 
