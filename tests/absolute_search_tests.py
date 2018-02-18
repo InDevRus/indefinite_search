@@ -1,11 +1,12 @@
-import unittest
+# noinspection PyUnresolvedReferences
 import pathmagic
 from tests.test_decorators import *
-from absolute_search import absolute_search as search
+
+from logic.absolute_search import absolute_search as search
 
 
 class AbsoluteSearchTests(unittest.TestCase):
-    @assert_equal(search, iterable=True)
+    @assert_equality(search, iterable=True)
     @append_arguments(False, False, False, False)
     @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
@@ -25,7 +26,7 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    Total 1 occurrence.',
                   '"ab0" is not a word.')]]
 
-    @assert_equal(search, iterable=True)
+    @assert_equality(search, iterable=True)
     @append_arguments(False, True, False, False)
     @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
@@ -48,7 +49,7 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    "SPACES" in 1 line, 21 position with 1 length.',
                   '    Total 1 occurrence.')]]
 
-    @assert_equal(search, iterable=True)
+    @assert_equality(search, iterable=True)
     @append_arguments(True, False, True, False)
     @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
@@ -62,7 +63,7 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    "waltz" in 4 line, 15 position with 1 length.',
                   '    Total 1 occurrence.')]]
 
-    @assert_equal(search, iterable=True)
+    @assert_equality(search, iterable=True)
     @append_arguments(True, False, False, False)
     @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
@@ -85,7 +86,7 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    "dwa-rf" in 4 line, 2 position with 1 length.',
                   '    Total 1 occurrence.')]]
 
-    @assert_equal(search, iterable=True)
+    @assert_equality(search, iterable=True)
     @append_arguments(False, False, False, False)
     @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()
@@ -104,7 +105,7 @@ class AbsoluteSearchTests(unittest.TestCase):
                   '    "now" in 1 line, 45 position with 9 length.',
                   '    Total 9 occurrences.')]]
 
-    @assert_equal(search, iterable=True)
+    @assert_equality(search, iterable=True)
     @append_arguments(False, False, False, True)
     @wrap_string_in_io(1, iterable=True)
     @wrap_string_in_io()

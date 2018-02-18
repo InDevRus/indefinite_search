@@ -1,4 +1,4 @@
-from general_methods import *
+from logic.general import *
 
 
 def absolute_search(file, words, length: int,

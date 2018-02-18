@@ -29,10 +29,11 @@ py indefinite_search [-h] [-a | -r] [-n] [-t [text] | -tf [path]]
 
 ```
 
-#### Example
+#### Examples
 
 ```
 py indefinite_search -tf "text.txt" -w word list -i
+py indefinite_search -iw word list < "text.txt" 
 ```
 
 #### To get help
@@ -46,11 +47,5 @@ py indefinite_search --help
 Simply type
 
 ```
-py indefinite_search/tests
-```
-
-To get specific information, type
-
-```
-py indefinite_search/tests --verbose
+pytest indefinite_search
 ```
