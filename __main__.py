@@ -1,10 +1,10 @@
 import argparse
+import sys
 from functools import wraps
 from io import StringIO
-import sys
 
-from logic.nominal_search import nominal_search
 from logic.absolute_search import absolute_search
+from logic.nominal_search import nominal_search
 
 
 def make_border(func, string: str = None):
@@ -31,8 +31,7 @@ def define_arguments() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
             description='Reads the text (from file, parameter or STDIN)'
                         'and set of words, then searches for these words '
-                        'in text.'
-    )
+                        'in text.')
 
     absolute_search_group = parser.add_mutually_exclusive_group(required=False)
     absolute_search_group.add_argument('-a', '--disable_absolute_search',

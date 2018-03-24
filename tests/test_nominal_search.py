@@ -1,8 +1,5 @@
-# noinspection PyUnresolvedReferences
-import pathmagic
-from tests.test_decorators import *
-
 from logic.nominal_search import nominal_search as search
+from tests.decorators import *
 
 
 class NominalSearchTests(unittest.TestCase):

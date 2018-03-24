@@ -1,9 +1,7 @@
-# noinspection PyUnresolvedReferences
-import pathmagic
-from tests.test_decorators import *
-
 import itertools
+
 from logic import general
+from tests.decorators import *
 
 
 class GeneralTests(unittest.TestCase):
